@@ -1,32 +1,46 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const addTaskButton = document.getElementById('add-task');
-    const newTaskInput = document.getElementById('new-task');
-    const tasksList = document.getElementById('tasks');
+function addTask() {
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
 
-    addTaskButton.addEventListener('click', addTask);
-    newTaskInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            addTask();
-        }
-    });
+    if (taskInput.value.trim() !== '') {
+        const taskItem = document.createElement('li');
 
-    function addTask() {
-        const taskText = newTaskInput.value.trim();
-        if (taskText !== '') {
-            const li = document.createElement('li');
-            li.innerHTML = `${taskText} <span class="timestamp">${getCurrentTimestamp()}</span> <button onclick="removeTask(this)">&#x2716;</button>`;
-            tasksList.appendChild(li);
-            newTaskInput.value = '';
-        }
-    }
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.classList.add('task-checkbox');
+        checkbox.onchange = () => {
+            if (checkbox.checked) {
+                taskItem.classList.add('completed');
+                alert('Task completed successfully!');
+            } else {
+                taskItem.classList.remove('completed');
+            }
+        };
 
-    window.removeTask = function(button) {
-        const li = button.parentNode;
-        tasksList.removeChild(li);
-    }
+        const taskText = document.createElement('span');
+        taskText.textContent = taskInput.value;
 
-    function getCurrentTimestamp() {
+        const timestamp = document.createElement('span');
         const now = new Date();
-        return now.toLocaleString();
+        timestamp.textContent = ` [Added: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}]`;
+        timestamp.classList.add('timestamp');
+
+        taskItem.appendChild(checkbox);
+        taskItem.appendChild(taskText);
+        taskItem.appendChild(timestamp);
+
+        taskList.appendChild(taskItem);
+
+        taskInput.value = '';
+
+        // Alert for adding a new task
+        alert('Successfully added a new task!');
+    } else {
+        alert('Please enter a task.');
     }
-});
+}
+
+function clearAll() {
+    const taskList = document.getElementById('taskList');
+    taskList.innerHTML = '';
+}
